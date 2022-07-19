@@ -58,4 +58,74 @@ Finally, the the ID column is redundant because we could just use the index of e
 ```python
 df.drop('id', axis=1,inplace=True)
 ```
+SECTION 2: Apply Data Cleaning Techniques
+
+First, let's seperate each column of data into two categories: category (non-numerical) and numerical.
+
+```python
+def extract_cat_num(df):
+    
+    cat_col = [col for col in df.columns if df[col].dtype == 'object']
+    num_col = [col for col in df.columns if df[col].dtype != 'object']
+    return cat_col,num_col
+
+cat_col,num_col=extract_cat_num(df)
+
+```
+
+For each non-numerical category, figure out the unique values that could be associated with each data point.
+
+```python
+for col in cat_col:
+    print('{} has {} values '.format(col,df[col].unique()))
+    print('\n')
+```
+
+We get: 
+
+<img width="649" alt="Screen Shot 2022-07-19 at 4 27 10 PM" src="https://user-images.githubusercontent.com/97994153/179851579-19c7855e-795b-46a7-9200-6a57c74ab5b5.png">
+
+
+Now we are seeing some 'dirty' data. Notice in the diabetes mellitus category that our data could be: yes, no, \tno , \tyes, or nan. \tno and \tyes are clearly supposed to be yes or no, so we need to clean that up. We could see these features in several other categories. 
+
+```python
+df['diabetes mellitus'].replace(to_replace={'\tno':'no','\tyes':'yes'}, inplace=True)
+
+df['coronary artery disease'].replace(to_replace={'\tno':'no','\tyes':'yes'}, inplace=True)
+
+df['class'] = df['class'].replace(to_replace='ckd\t',value='ckd')
+
+# Now double check that our data is clean
+for col in cat_col:
+    print('{} has {} values '.format(col,df[col].unique()))
+    print('\n')
+    
+```
+
+<img width="555" alt="Screen Shot 2022-07-19 at 4 30 06 PM" src="https://user-images.githubusercontent.com/97994153/179851940-183297ee-eb67-491e-8914-ff7d9f5308fa.png">
+
+CLEAN DATA!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
