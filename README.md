@@ -106,6 +106,50 @@ for col in cat_col:
 
 CLEAN DATA!!!
 
+SECTION 3: Analyzing distribution of each numerical column and checking label distribution of categorial data
+
+Let's start by visualizing the distribution of each numerical category.
+
+```python
+plt.figure(figsize=(30,20))
+
+for i,feature in enumerate(num_col):
+    plt.subplot(5, 3, i+1)
+    df[feature].hist()
+    plt.title(feature)
+```
+This gives us:
+
+<img width="932" alt="Screen Shot 2022-07-19 at 4 49 51 PM" src="https://user-images.githubusercontent.com/97994153/179854695-e0f1ab4c-dbce-4bed-aafd-3057d0a6ce21.png">
+
+
+Now that our data is more viewable, let's analyze it. There are several high-postive outliers (we'll deal with this later). For example in the blood pressure graph we see some high-level outliers that may skew our numerical analysis. 
+
+Now let's do label distribution of categorical data:
+
+```python
+
+
+plt.figure(figsize=(14, 14))
+
+for i,feature in enumerate(cat_col):
+    plt.subplot(4, 3, i+1)
+    sns.countplot(df[feature])
+    
+```
+
+<img width="861" alt="Screen Shot 2022-07-19 at 4 51 38 PM" src="https://user-images.githubusercontent.com/97994153/179854887-b83e2c63-118c-4971-a8eb-4ab23a827356.png">
+
+    
+    
+    
+
+
+
+
+
+
+
 
 
 
