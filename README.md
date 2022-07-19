@@ -140,7 +140,86 @@ for i,feature in enumerate(cat_col):
 
 <img width="861" alt="Screen Shot 2022-07-19 at 4 51 38 PM" src="https://user-images.githubusercontent.com/97994153/179854887-b83e2c63-118c-4971-a8eb-4ab23a827356.png">
 
+Section 4: Check how columns correlate, and it's impact on Chronic Kidney Disease (class)
+
+```python
+# Let's get our raw correlation data
+df.corr()
+```
+<img width="996" alt="Screen Shot 2022-07-19 at 5 22 50 PM" src="https://user-images.githubusercontent.com/97994153/179859010-2e498dbc-3f53-4364-b7a8-07f1c6c04a43.png">
+
+This raw data is hard to read and unless you're a statistician, you can't draw too many strong conclusions from it. So let's convert it to a heatmap:
+
+```python
+
+plt.figure(figsize=(10,8))
+sns.heatmap(df.corr(), annot=True)
+```
+
+<img width="796" alt="Screen Shot 2022-07-19 at 5 23 46 PM" src="https://user-images.githubusercontent.com/97994153/179859016-149e0d0d-90ee-417d-ad1c-5ac295b98fd7.png">
+
+Looking at our heatmap, let's draw some conclusions. The specific gravity column and red blood cell count gives us .58
+which is pretty good correlation. Similarly, the specific gravity and hemoglobin has a .6 correlation. This means if 
+the specific gravity column increases, there is a 60% chance the hemoglobin also increases.We can also draw some negative correaltions from this data set. For example blood urea and red blood cell count gives 
+us -.58. 
+
+Let's group based on the basis of red blood count
+
+```python
+df.groupby(['red blood cells', 'class'])['red blood cell count'].agg(['count', 'mean','median','min', 'max'])
+```
+
+<img width="491" alt="Screen Shot 2022-07-19 at 5 25 14 PM" src="https://user-images.githubusercontent.com/97994153/179859023-e9f3ffff-7e42-459f-ab4f-c20782a0a053.png">
+
+This table can be interpreted like this: There are 25 people with an abnormal red blood cell count who have Chronic Kidney Disease. The mean red blood cell 
+count of those indivuals is 3.8 million cells per microlitre (cells/mcL). Similarly there are 134 people without a 
+Chronic Kidney Disease and their average rbc is much higher (5.4 cells/mcL). 
+
+
+Let's use plotly's data visualization libraries to see this correlation illustrated.
+```python
+px.violin(df,y='red blood cell count', x='class', color='class')
+```
+
+<img width="948" alt="Screen Shot 2022-07-19 at 5 26 58 PM" src="https://user-images.githubusercontent.com/97994153/179859033-f2c8ccf4-4088-4252-91a6-3df7d7d4505b.png">
+
+This handy violin data visualization tool allows us to extract that indivuals with Chronic Kidney Disease have, 
+on average,  a much higher red blood cell count then those without CKD. Using this information, we can start to get 
+ideas on what our model should focus on and the degree of inclusion.
+
+
+SECTION 5: Automate our Analysis
     
+Based on [this](https://www.banglajol.info/index.php/CMOSHMCJ/article/view/15508/10998) paper by Prof. S. Khanam we see there exists a relationship between hemoglobin and packed cell volume, so lets 
+investigate the relationship on that as well. But first let's automate functions for the violin graph and a scatter plot.
+
+```python
+# Let's make a function to automate this violin graph:
+
+def violin(col):
+    fig = px.violin(df,y=col,x='class',color='class', box=True)
+    return fig.show()
+    
+    
+# Let's make another function to automate the scatter plot as well:
+
+def scatters():
+    fig = px.scatter(df, x=col1,y=col2, color='class')
+    return fig.show
+    
+    
+def kde_plot(feature):
+    grid = sns.FacetGrid(df, hue='class',aspect=2)
+    grid.map(sns.kdeplot, feature)
+    grid.add_legend()
+
+
+```
+
+
+
+
+
     
     
 
