@@ -251,6 +251,77 @@ for col in cat_col:
 
 <img width="478" alt="Screen Shot 2022-07-19 at 7 03 21 PM" src="https://user-images.githubusercontent.com/97994153/179868242-cceeda0c-5d8f-4f2e-b1fd-be49fc804c26.png">
 
+We should also Apply feature encoding technique onto our data. The reason we need this is because whenever our data passes into our ML model, it won't understand non-numerical data. We need to convert these features into numerical categories. Let's see how many different categories we will 
+need by running a loop that can check this:
+
+```python
+for col in cat_col:
+    print('{} has {} categories'.format(col,df[col].nunique()))
+```
+
+We get in return:
+
+<img width="337" alt="Screen Shot 2022-07-20 at 9 03 19 AM" src="https://user-images.githubusercontent.com/97994153/180002104-b9a8405e-ba81-42e7-8ab2-a9841f022fa6.png">
+
+Moving onto the Label Encoding, for most data sets we can just assume binary values. For example normal = 0, abnormal = 1
+
+```python
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+for col in cat_col:
+    df[col] = le.fit_transform(df[col])
+    
+# Now there is no more categorical data left in our data
+df.head()
+
+<img width="1500" alt="Screen Shot 2022-07-20 at 9 05 06 AM" src="https://user-images.githubusercontent.com/97994153/180002453-1b0f29f6-b90a-4f8e-9e16-4dd2751cdc22.png">
+
+```
+SECTION 8: Selecting Best Features (using suitable Feature Importance Techniques). 
+
+We need to narrow our 24 features to 10 of the most important features that impact Chronic Kidney Disease. We can use the sklearn import to help us determine that.
+
+```python
+from sklearn.feature_selection import SelectKBest
+
+# internally this class will check if probbality values are less than 0.25:
+
+from sklearn.feature_selection import chi2
+
+ind_col= [col for col in df.columns if col!='class']
+dep_col = 'class'
+
+# Create our indpendent and dependent variables
+X = df[ind_col]
+Y = df[dep_col]
+
+X.head() #Independent Variables
+
+#Select the best features depending on probablity values
+ordered_ranks_features = SelectKBest(score_func=chi2,k=20) 
+ordered_feature = ordered_ranks_features.fit(X,Y)
+
+ordered_feature
+# Let's get the ranking:
+ordered_feature.scores_
+```
+<img width="675" alt="Screen Shot 2022-07-20 at 9 09 07 AM" src="https://user-images.githubusercontent.com/97994153/180003400-281ee0b8-4cde-4ede-8c07-542110ea73fc.png">
+
+Let's make this data more user-friendly/readable by converting it into a data frame
+
+```python
+
+datascores = pd.DataFrame(ordered_feature.scores_, columns = ['Score'])
+dfcols = pd.DataFrame(X.columns)
+features_rank = pd.concat([dfcols, datascores], axis = 1) 
+features_rank.columns = ['Features', 'Score'] #Organize Table
+features_rank.nlargest(10, 'Score') # We just want the top 10 features
+```
+<img width="397" alt="Screen Shot 2022-07-20 at 9 10 29 AM" src="https://user-images.githubusercontent.com/97994153/180003652-20aa7663-d1c8-4de6-8c1c-b4df886b2600.png">
+
+So the 10 features we'll build our model on is: ['white blood cell count', 'blood glucose random', 'blood urea',
+       'packed cell volume', 'serum creatinine', 'albumin', 'haemoglobin',
+       'age', 'sugar', 'ypertension']
 
 
 
