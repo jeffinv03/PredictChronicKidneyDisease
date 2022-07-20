@@ -323,6 +323,90 @@ So the 10 features we'll build our model on is: ['white blood cell count', 'bloo
        'packed cell volume', 'serum creatinine', 'albumin', 'haemoglobin',
        'age', 'sugar', 'ypertension']
 
+SECTION 9: Build a cross validated model and predict accuracy
+
+Now that we have cleaned our data and narrowed down to 10 best features, we can start to train our model. We can use the sklearn model import to do this heavy lifting for us.
+
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X_new,Y,random_state=0, test_size=0.25)
+# Print how many dimensions of data
+print(X_train.shape)
+print(X_test.shape)
+Y_train.value_counts()
+```
+Checking whether our data is imbalanced or not is very important. Our program returned 0 imbalanced situations compared to 188. And to double check we ran it again and it returned 1 imbalanced sitaution compared to 112. These are very promising ratios! Now we know it's not imbalanced, we can pass it into a ML model.
+
+```python
+
+!pip install xgboost
+from xgboost import XGBClassifier
+
+# Now we can cross train our model
+XGBClassifier()
+
+
+params = {
+    'learning_rate':[.05, .20, .25],
+    'max-depth':[5, 8, 10],
+    'min_child_weight':[1,3,5,7],
+    'gamma':[0.0, 0.1, 0.2, 0.4],
+    'colsample_bytree':[0.3,0.4,0.7]
+}
+
+from sklearn.model_selection import RandomizedSearchCV
+
+classifier = XGBClassifier()
+random_search = RandomizedSearchCV(classifier, param_distributions = params,n_iter=5,scoring='roc_auc', n_jobs=-1, cv=5, verbose=3)
+
+random_search.fit(X_train,Y_train)
+
+random_search.best_estimator_
+
+```
+These are the parameters our program returned and so we'll pass it in to test our model:
+
+<img width="739" alt="Screen Shot 2022-07-20 at 9 18 49 AM" src="https://user-images.githubusercontent.com/97994153/180005574-283a748c-f6dc-4d94-b153-ff32248bb3b6.png">
+
+```python
+# To get the best parameters for our model:
+random_search.best_params_
+
+# Now initialize our model
+classifier = XGBClassifier(base_score=0.5, booster='gbtree', callbacks=None,
+              colsample_bylevel=1, colsample_bynode=1, colsample_bytree=0.3,
+              early_stopping_rounds=None, enable_categorical=False,
+              eval_metric=None, gamma=0.0, gpu_id=-1, grow_policy='depthwise',
+              importance_type=None, interaction_constraints='',
+              learning_rate=0.05, max_depth=10, max_bin=256,
+              max_cat_to_onehot=4, max_delta_step=0, max_leaves=0,
+              min_child_weight=3, monotone_constraints='()',
+              n_estimators=100, n_jobs=0, num_parallel_tree=1, predictor='auto',
+              random_state=0, reg_alpha=0)
+              
+classifier.fit(X_train,Y_train)
+Y_pred = classifier.predict(X_test)
+
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+confusion_matrix(Y_test, Y_pred)
+accuracy_score(Y_test, Y_pred)
+
+```
+
+And finally after a couple minutes of data processing, we got back:
+
+<img width="391" alt="Screen Shot 2022-07-20 at 9 21 38 AM" src="https://user-images.githubusercontent.com/97994153/180006321-24f25455-7966-40fd-b8c3-ac6c3bd695ab.png">
+
+
+99% accuracy!!! We predicted around 95%-97% accuracy for our model, so this was amazing. And now we've succesfully built our model from the ground up and it's able to input even more patient data to continue to fine tune our model. 
+
+
+
+
+
+
+
 
 
 
