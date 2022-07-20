@@ -1,4 +1,18 @@
-Project Name: Predict Status of Chronic Kidney Disease using Machine Learning and Data Science
+
+# Predict Status of Chronic Kidney Disease using Machine Learning and Data Science - Jeffin Varghese (UT Austin B.S. Computer Science)
+
+I decided to build a model to predict status of Chronic Kidney Disease using Machine Learning and Data Science,
+After creating a project that could detect E coli based on DNA strands, I thought it would be fitting to take this
+experience and build my own model that from the ground up. Over the course of several weeks, and learning Jupyter,
+choosing which imports to utilize, and how to preprocess and clean my data, this is the final documentation for my 
+project. 
+
+The data was retreived from the public CDC records for Kidney Disease for the Southwestern region of the USA
+in 2021. The model will be cross trained with the first quarter of 2022 data as soon as it comes out.
+
+My model was based on papers by [Andrew S Levey](https://www.sciencedirect.com/science/article/pii/S0140673611601785/pdfft?casa_token=8NT6bA1DvQ4AAAAA:emGdR3Ly_DHv_U_dqoJpcbMHFOwE6mc3mzroS-zN88Cr-5_L6h2UMPg-pKv6WUzTOc5Og9kc6uk&md5=694b788cffe32a2b85c6719618e373c9&pid=1-s2.0-S0140673611601785-main.pdf) and the [Centers for Disease Control and Prevention](https://fluoridealert.org/studytracker/38332/)
+
+By Jeffin Varghese
 
 SECTION 1: Perform Data-Preprocessing and Prepate your data for Analysis and Modelling our purpose.
 
