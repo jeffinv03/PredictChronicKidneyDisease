@@ -213,8 +213,46 @@ def kde_plot(feature):
     grid.map(sns.kdeplot, feature)
     grid.add_legend()
 
+```
+SECTION 6: Dealing with missing values
+
+If we don't deal with missing values, our model will incorrectly portray our data and our conclusions. Similarly if we wish to expand our model to include more data in the future, we cannot ensure that data is perfect. We must clean our data and adapt our model to account for this.
+
+```python
+df.isna().sum()
+```
+<img width="345" alt="Screen Shot 2022-07-19 at 7 00 51 PM" src="https://user-images.githubusercontent.com/97994153/179868223-1076ecd1-430b-4182-83b5-3a2c0220fcd5.png">
+
+This is not an insignificant amount of missing data. Particularly with the red blood/white blood cell count, which is critical for our model for Chronic Kidney Disease. The solution was to fill missing values with some value. However, we can't use median/mean/std. dev because if a large amount of our data is missing (over 30%) then our machine learning model, based on normal distribution, will be impacted negatively, so we make a function that fills missing data with a random value that already exists in the data set to keep ratios the same.
+
+
+
+```python
+def Random_value_Imputation(feature):
+    random_sample = df[feature].dropna().sample(df[feature].isnull().sum())
+    random_sample.index = df[df[feature].isnull()].index
+    df.loc[df[feature].isnull(),feature]= random_sample
+        
+def impute_mode(feature):
+    mode = df[feature].mode()[0]
+    df[feature] = df[feature].fillna(mode)
 
 ```
+
+```python
+# Now let's check missing values in categorical and numerical features and fix it using our newly created function
+
+for col in num_col:
+    Random_value_Imputation(col)
+    
+for col in cat_col:
+    impute_mode(col)
+```
+
+<img width="478" alt="Screen Shot 2022-07-19 at 7 03 21 PM" src="https://user-images.githubusercontent.com/97994153/179868242-cceeda0c-5d8f-4f2e-b1fd-be49fc804c26.png">
+
+
+
 
 
 
