@@ -3,7 +3,7 @@
 
 I decided to build a model to predict status of Chronic Kidney Disease using Machine Learning and Data Science,
 After creating a project that could detect E coli based on DNA strands, I thought it would be fitting to take this
-experience and build my own model that from the ground up. Over the course of several weeks, and learning Jupyter,
+experience and build my own model from the ground up. Over the course of several weeks, and learning Jupyter,
 choosing which imports to utilize, and how to preprocess and clean my data, this is the final documentation for my 
 project. 
 
